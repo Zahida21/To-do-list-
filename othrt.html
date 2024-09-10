@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List App</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+    }
+    .delete-btn {
+        float: right;
+        background-color: #f44336;
+    }
+    .delete-btn:hover {
+        background-color: #da190b;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>To-Do List</h1>
+    <input type="text" id="todoInput" placeholder="Add new to-do">
+    <button id="addBtn">Add</button>
+    <ul id="todoList"></ul>
+</div>
+<script>
+    // Load todos from local storage
+    let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+    // Function to render todos
+    function renderTodos() {
+        const todoList = document.getElementById('todoList');
+        todoList.innerHTML = '';
+        todos.forEach((todo, index) => {
+            const li = document.createElement('li');
+            li.textContent = todo;
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                todos.splice(index, 1);
+                localStorage.setItem('todos', JSON.stringify(todos));
+                renderTodos();
+            });
+            li.appendChild(deleteBtn);
+            todoList.appendChild(li);
+        });
+    }
+
+    // Add todo
+    document.getElementById('addBtn').addEventListener('click', () => {
+        const todoInput = document.getElementById('todoInput');
+        const todoText = todoInput.value.trim();
+        if (todoText !== '') {
+            todos.push(todoText);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+            todoInput.value = '';
+        }
+    });
+
+    // Initial render
+    renderTodos();
+</script>
+</body>
+</html>
